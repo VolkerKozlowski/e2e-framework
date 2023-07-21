@@ -18,8 +18,7 @@ package features
 
 import (
 	"fmt"
-
-	"sigs.k8s.io/e2e-framework/pkg/internal/types"
+	"sigs.k8s.io/e2e-framework/pkg/types"
 )
 
 // FeatureBuilder represents is a type to define a
@@ -82,6 +81,11 @@ func (b *FeatureBuilder) Assess(desc string, fn Func) *FeatureBuilder {
 
 func (b *FeatureBuilder) AssessWithDescription(name, description string, fn Func) *FeatureBuilder {
 	return b.WithStepDescription(name, description, types.LevelAssess, fn)
+}
+
+func (b *FeatureBuilder) WithParentFeature(f Feature) *FeatureBuilder {
+	b.feat.parent = f
+	return b
 }
 
 // Feature returns a feature configured by builder.

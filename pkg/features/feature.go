@@ -18,8 +18,7 @@ package features
 
 import (
 	"regexp"
-
-	"sigs.k8s.io/e2e-framework/pkg/internal/types"
+	"sigs.k8s.io/e2e-framework/pkg/types"
 )
 
 type (
@@ -35,6 +34,7 @@ type defaultFeature struct {
 	description string
 	labels      types.Labels
 	steps       []types.Step
+	parent      Feature
 }
 
 func newDefaultFeature(name, description string) *defaultFeature {
@@ -50,11 +50,36 @@ func (f *defaultFeature) Labels() types.Labels {
 }
 
 func (f *defaultFeature) Steps() []types.Step {
+	if f.Parent() != nil {
+		// need to reorder steps
+		parentSteps := f.Parent().Steps()
+		parentSetups := GetStepsByLevel(parentSteps, types.LevelSetup)
+		parentAssesses := GetStepsByLevel(parentSteps, types.LevelAssess)
+		parentTeardowns := GetStepsByLevel(parentSteps, types.LevelTeardown)
+
+		setups := GetStepsByLevel(f.Steps(), types.LevelSetup)
+		assesses := GetStepsByLevel(f.Steps(), types.LevelAssess)
+		teardowns := GetStepsByLevel(f.Steps(), types.LevelTeardown)
+
+		var result []Step
+		result = append(result, parentSetups...)
+		result = append(result, setups...)
+		result = append(result, parentAssesses...)
+		result = append(result, assesses...)
+		// reverse teardown
+		result = append(result, teardowns...)
+		result = append(result, parentTeardowns...)
+		return result
+	}
 	return f.steps
 }
 
 func (f *defaultFeature) Description() string {
 	return f.description
+}
+
+func (f *defaultFeature) Parent() Feature {
+	return f.parent
 }
 
 type testStep struct {
@@ -106,7 +131,6 @@ func GetStepsByLevel(steps []types.Step, l types.Level) []types.Step {
 
 	return result
 }
-
 func FilterStepsByName(steps []types.Step, regexName *regexp.Regexp) []types.Step {
 	if steps == nil {
 		return nil

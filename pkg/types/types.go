@@ -96,6 +96,8 @@ type Feature interface {
 	Labels() Labels
 	// Steps testing tasks to test the feature
 	Steps() []Step
+	// Link to parent
+	Parent() Feature
 }
 
 type Level uint8

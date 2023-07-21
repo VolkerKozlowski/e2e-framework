@@ -19,12 +19,12 @@ package env
 import (
 	"context"
 	"os"
+	"sigs.k8s.io/e2e-framework/pkg/types"
 	"testing"
 
 	log "k8s.io/klog/v2"
 
 	"sigs.k8s.io/e2e-framework/pkg/envconf"
-	"sigs.k8s.io/e2e-framework/pkg/internal/types"
 )
 
 var envForTesting types.Environment

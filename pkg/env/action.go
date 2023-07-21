@@ -19,11 +19,11 @@ package env
 import (
 	"context"
 	"fmt"
+	"sigs.k8s.io/e2e-framework/pkg/types"
 	"testing"
 
 	"k8s.io/klog/v2"
 	"sigs.k8s.io/e2e-framework/pkg/envconf"
-	"sigs.k8s.io/e2e-framework/pkg/internal/types"
 )
 
 type actionRole uint8
