@@ -33,6 +33,7 @@ type defaultFeature struct {
 	name   string
 	labels types.Labels
 	steps  []types.Step
+	parent Feature
 }
 
 func newDefaultFeature(name string) *defaultFeature {
@@ -48,7 +49,32 @@ func (f *defaultFeature) Labels() types.Labels {
 }
 
 func (f *defaultFeature) Steps() []types.Step {
+	if f.Parent() != nil {
+		// need to reorder steps
+		parentSteps := f.Parent().Steps()
+		parentSetups := GetStepsByLevel(parentSteps, types.LevelSetup)
+		parentAssesses := GetStepsByLevel(parentSteps, types.LevelAssess)
+		parentTeardowns := GetStepsByLevel(parentSteps, types.LevelTeardown)
+
+		setups := GetStepsByLevel(f.steps, types.LevelSetup)
+		assesses := GetStepsByLevel(f.steps, types.LevelAssess)
+		teardowns := GetStepsByLevel(f.steps, types.LevelTeardown)
+
+		var result []Step
+		result = append(result, parentSetups...)
+		result = append(result, setups...)
+		result = append(result, parentAssesses...)
+		result = append(result, assesses...)
+		// reverse teardown
+		result = append(result, teardowns...)
+		result = append(result, parentTeardowns...)
+		return result
+	}
 	return f.steps
+}
+
+func (f *defaultFeature) Parent() Feature {
+	return f.parent
 }
 
 type testStep struct {

@@ -70,6 +70,11 @@ func (b *FeatureBuilder) Assess(desc string, fn Func) *FeatureBuilder {
 	return b.WithStep(desc, types.LevelAssess, fn)
 }
 
+func (b *FeatureBuilder) WithParentFeature(f Feature) *FeatureBuilder {
+	b.feat.parent = f
+	return b
+}
+
 // Feature returns a feature configured by builder.
 func (b *FeatureBuilder) Feature() types.Feature {
 	return b.feat
