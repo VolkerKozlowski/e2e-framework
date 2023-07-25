@@ -18,10 +18,10 @@ package env
 
 import (
 	"context"
+	"sigs.k8s.io/e2e-framework/pkg/types"
 	"testing"
 
 	"sigs.k8s.io/e2e-framework/pkg/envconf"
-	"sigs.k8s.io/e2e-framework/pkg/internal/types"
 )
 
 func TestAction_Run(t *testing.T) {

@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"math/rand"
 	"regexp"
+	"sigs.k8s.io/e2e-framework/pkg/types"
 	"sync"
 	"testing"
 	"time"
@@ -31,7 +32,6 @@ import (
 
 	"sigs.k8s.io/e2e-framework/pkg/envconf"
 	"sigs.k8s.io/e2e-framework/pkg/features"
-	"sigs.k8s.io/e2e-framework/pkg/internal/types"
 )
 
 type (
